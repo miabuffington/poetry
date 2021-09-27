@@ -1,0 +1,87 @@
+#text = text.replace("“","\"").replace("”","\"")
+!pip install pronouncing
+import pronouncing
+
+
+#text blob thing
+from textblob import TextBlob
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+with open ('/content/lookingglass.txt') as f:
+  text = f.read()
+blob = TextBlob(text)
+
+
+
+#counting syllables
+# first, get a random sentence from my text
+import random
+sentence = random.choice(blob.sentences)
+
+
+short_sentences = []
+
+import re
+
+
+# getting sentences with specific number of syllables
+for sentence in blob.sentences:
+  clean_sentence = re.sub(r'[,\.\"“”\?\!\;\-\&]', ' ', str(sentence)).replace('’','\'')
+  sentence_phonemes = []
+
+  # iterate through the words in the setnence
+  for word in clean_sentence.split():
+
+    # get the list of phonemes for this word
+    word_phonemes = pronouncing.phones_for_word(word)
+    # print(word,word_phonemes[0])
+
+    # if a pronunciation is found, add that to the phonemes for the sentence
+    if (len(word_phonemes) > 0):
+      sentence_phonemes.append(word_phonemes[0])
+
+  syllables = 0
+
+  for p in sentence_phonemes:
+    # use the syllable_count() function to get the number of syllables for 
+    # this word. And add that to the ongoing syllable_count
+    syllables += pronouncing.syllable_count(p)
+
+  if (syllables is 5):
+    short_sentences.append(sentence)
+
+
+
+# poetry by me
+import random
+
+person = ["sailor", "survivor", "mountaineer", "magician", "friend", "man", "woman", 
+          "navigator", "dreamer", "nomad", "mathemetician", "scholar", "traveler", "creator", "rescuer", "teacher",
+          "lover", "human", "native New Yorker" ]
+
+locations = ["Austria", "the sea", "the mountains", "the bay", "the boardwalk", "the island",
+             "the bayou", "the outside of the city", "the wilderness", "the forest",
+             "Tennesssee", "Rhode Island", "a nearby pond", 
+             "the space between two sycamore trees", "a place far from any civilization", "the valley", 
+             "old English streets", "the Scottish highlands" ]
+
+things = ["life", "love", "peace", "their purpose in life", "the meaning of life", "knock knock jokes",
+          "the existence of aliens", "the infallibility of man", "communism", "life itself", 
+          "if the chicken crossed the road", "the possibility of the future", "the unpredictable nature of life",
+          "tomorrow's weather" ]
+
+goal = ["science", "life", "higher education", "the human experience", "the capitalist agenda", "the internet", 
+               "social media", "philosophy", "the universe", "the government", "our forefathers", ]
+
+line_1 = "TO BE A " + random.choice(person).upper()
+line_2 = "WANDERING AROUND " + random.choice(locations).upper()
+line_3 = "PONDERING ABOUT " + random.choice(things).upper()
+line_4 = "THIS IS THE GOAL OF " + random.choice(goal).upper()
+
+print(line_1)
+print("\t" + line_2)
+print("\t\t" + line_3)
+print("\t\t\t" + line_4)
+print(random.choice(short_sentences).upper())
+
